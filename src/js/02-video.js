@@ -5,6 +5,7 @@ const iframe = document.querySelector('#vimeo-player');
 const TIME_KEY = 'videoplayer-current-time';
 
 const player = new Player(iframe);
+setCurrentTime();
 player.on('timeupdate', throttle(getCurrentTime, 1000));
 
 function getCurrentTime() {
@@ -19,19 +20,21 @@ function getCurrentTime() {
     });
 }
 
-player
-  .setCurrentTime(JSON.parse(localStorage.getItem(TIME_KEY)))
-  .then(function (seconds) {
-    seconds = currentSeconds;
-  })
-  .catch(function (error) {
-    switch (error.name) {
-      case 'RangeError':
-        // the time was less than 0 or greater than the video’s duration
-        break;
+function setCurrentTime() {
+  player
+    .setCurrentTime(JSON.parse(localStorage.getItem(TIME_KEY)))
+    .then(function (seconds) {
+      seconds = currentSeconds;
+    })
+    .catch(function (error) {
+      switch (error.name) {
+        case 'RangeError':
+          // the time was less than 0 or greater than the video’s duration
+          break;
 
-      default:
-        // some other error occurred
-        break;
-    }
-  });
+        default:
+          // some other error occurred
+          break;
+      }
+    });
+}
